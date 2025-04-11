@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIT7 QUIZ</title>
+    <style>
+        /* التنسيق العام */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            overflow-x: hidden;
+            display: flex; /* إضافة Flexbox لتوسيط العناصر */
+            justify-content: center; /* توسيط أفقي */
+            align-items: center; /* توسيط رأسي */
+            min-height: 100vh; /* لضمان ملء الشاشة بالكامل */
+        }
+
+        .exam-container {
+            max-width: 900px;
+            width: 100%;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* شريط التوقيت */
+        .timer-bar {
+            background: #d4c6ac;
+            color: white;
+            padding: 15px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px 5px 0 0;
+            font-size: 18px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .timer {
+            font-weight: bold;
+            background: rgba(0,0,0,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        /* منطقة الامتحان */
+        .exam-area {
+            background: white;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            display: none;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            display: none;
+        }
+
+        .question.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #d4c6ac;
+            font-weight: bold;
+        }
+
+        .options {
+            margin-right: 20px;
+        }
+
+        .option {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .option input {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.2s;
+            flex-grow: 1;
+        }
+
+        .option label:hover {
+            background: #f5f0e6;
+        }
+
+        /* أزرار التنقل */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: #d4c6ac;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #c5b79b;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ddd;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* شريط التقدم */
+        .progress-container {
+            width: 100%;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #d4c6ac;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        /* نتائج الامتحان */
+        .results-container {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-title {
+            color: #d4c6ac;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .percentage {
+            font-size: 22px;
+            color: #2c786c;
+            margin-bottom: 20px;
+        }
+
+        .correct-answers {
+            text-align: right;
+            margin-top: 30px;
+        }
+
+        .answer-item {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+        }
+
+        .correct {
+            background-color: #e8f5e9;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .wrong {
+            background-color: #ffebee;
+            border-left: 4px solid #c62828;
+        }
+
+        .answer-status {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .correct .answer-status {
+            color: #2e7d32;
+        }
+
+        .wrong .answer-status {
+            color: #c62828;
+        }
+
+        .answer-details {
+            margin-top: 10px;
+        }
+
+        /* رسالة التأكيد */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .confirm-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .confirm-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .confirm-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .confirm-submit {
+            background: #d4c6ac;
+            color: white;
+        }
+
+        .confirm-cancel {
+            background: #f0f0f0;
+        }
+
+        /* منع الخروج */
+        body.exam-started {
+            overflow: hidden;
+        }
+
+        /* رسالة تأكيد الخروج */
+        .exit-confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .exit-confirm-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .start-btn {
+            padding: 20px 40px;
+            background: #d4c6ac;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .start-btn:hover {
+            background: #c5b79b;
+            transform: translate(-50%, -52%);
+        }
+
+        /* تعديل رسالة تأكيد إعادة التحميل */
+        #reloadConfirmModal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="exam-container">
+        <button class="start-btn" id="startExamBtn">ابدأ الامتحان</button>
+        <div class="timer-bar" id="timerBar">
+            <div>UNIT7 QUIZ</div>
+            <div class="timer" id="timer">01:00:00</div>
+        </div>
+
+        <div class="exam-area" id="examArea">
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="question active" id="question1">
+                <div class="question-text">1. السؤال الأول: ...؟</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1a" value="a">
+                        <label for="q1a">الخيار أ</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1b" value="b">
+                        <label for="q1b">الخيار ب</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1c" value="c">
+                        <label for="q1c">الخيار ج</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1d" value="d">
+                        <label for="q1d">الخيار د</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question2">
+                <div class="question-text">2. السؤال الثاني: ...؟</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2a" value="a">
+                        <label for="q2a">الخيار أ</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2b" value="b">
+                        <label for="q2b">الخيار ب</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2c" value="c">
+                        <label for="q2c">الخيار ج</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" id="q2d" value="d">
+                        <label for="q2d">الخيار د</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prevBtn" disabled>السابق</button>
+                <button class="nav-btn" id="nextBtn">التالي</button>
+                <button class="nav-btn" id="submitBtn" style="display: none;">تسليم الامتحان</button>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 class="results-title">نتيجة الامتحان</h2>
+            <div class="score">درجتك: <span id="finalScore">0</span>/<span id="totalQuestions">0</span></div>
+            <div class="percentage">النسبة المئوية: <span id="percentage">0</span>%</div>
+
+            <div class="correct-answers">
+                <h3>تفاصيل الإجابات:</h3>
+                <div id="answersReview"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-content">
+            <h2>تأكيد تسليم الامتحان</h2>
+            <p>هل أنت متأكد أنك تريد تسليم الامتحان الآن؟</p>
+            <p>بعد التسليم لن تتمكن من تعديل إجاباتك.</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-cancel" id="cancelSubmit">إلغاء</button>
+                <button class="confirm-btn confirm-submit" id="confirmSubmit">تأكيد التسليم</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="exit-confirm-modal" id="exitConfirmModal">
+        <div class="exit-confirm-content">
+            <h2>تأكيد الخروج من الامتحان</h2>
+            <p>هل أنت متأكد أنك تريد الخروج من الامتحان؟</p>
+            <p>إذا خرجت، سيتم فقدان تقدمك.</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-cancel" id="cancelExit">إلغاء</button>
+                <button class="confirm-btn confirm-submit" id="confirmExit">تأكيد الخروج</button>
+            </div>
+        </div>
+    </div>
+    <div id="reloadConfirmModal" class="confirm-modal">
+        <div class="confirm-content">
+            <h2>تأكيد إعادة تحميل الصفحة</h2>
+            <p>هل أنت متأكد أنك تريد إعادة تحميل الصفحة؟</p>
+            <p>إذا قمت بإعادة التحميل، سيتم فقدان تقدمك في الامتحان.</p>
+            <div class="confirm-buttons">
+                <button id="reloadCancel" class="confirm-btn confirm-cancel">إلغاء</button>
+                <button id="reloadConfirm" class="confirm-btn confirm-submit">تأكيد إعادة التحميل</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تعريف المتغيرات العامة
+        let timeLeft = 60 * 60; // 60 دقيقة (بالثواني)
+        let timerInterval;
+        let examStarted = false;
+        let userAnswers = {};
+        let currentQuestion = 0; // السؤال الحالي
+
+        // الأسئلة والإجابات
+        const questionsData = [
+            {
+                question: "1. السؤال الأول: ...؟",
+                options: {
+                    a: "الخيار أ",
+                    b: "الخيار ب",
+                    c: "الخيار ج",
+                    d: "الخيار د"
+                },
+                correctAnswer: "b"
+            },
+            {
+                question: "2. السؤال الثاني: ...؟",
+                options: {
+                    a: "الخيار أ",
+                    b: "الخيار ب",
+                    c: "الخيار ج",
+                    d: "الخيار د"
+                },
+                correctAnswer: "a"
+            }
+        ];
+
+        // عناصر DOM
+        const timer = document.getElementById('timer');
+        const progressBar = document.getElementById('progressBar');
+        const questions = document.querySelectorAll('.question');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const examArea = document.getElementById('examArea');
+        const confirmModal = document.getElementById('confirmModal');
+        const cancelSubmit = document.getElementById('cancelSubmit');
+        const confirmSubmit = document.getElementById('confirmSubmit');
+        const answersReview = document.getElementById('answersReview');
+        const finalScore = document.getElementById('finalScore');
+        const totalQuestions = document.getElementById('totalQuestions');
+        const percentage = document.getElementById('percentage');
+        const exitConfirmModal = document.getElementById('exitConfirmModal');
+        const cancelExit = document.getElementById('cancelExit');
+        const confirmExit = document.getElementById('confirmExit');
+        const startExamBtn = document.getElementById('startExamBtn');
+        const timerBar = document.getElementById('timerBar');
+        const reloadConfirmModal = document.getElementById('reloadConfirmModal');
+        const reloadCancel = document.getElementById('reloadCancel');
+        const reloadConfirm = document.getElementById('reloadConfirm');
+
+        // استعادة حالة الامتحان من localStorage
+        function restoreExamState() {
+            try {
+                const savedState = localStorage.getItem('examState');
+                if (savedState) {
+                    const state = JSON.parse(savedState);
+                    timeLeft = state.timeLeft;
+                    userAnswers = state.userAnswers || {};
+                    currentQuestion = state.currentQuestion || 0;
+                    examStarted = true;
+
+                    updateTimerDisplay();
+
+                    for (const question in userAnswers) {
+                        const answer = userAnswers[question];
+                        if (answer) {
+                            const input = document.querySelector(`input[name="${question}"][value="${answer}"]`);
+                            if (input) input.checked = true;
+                        }
+                    }
+
+                    startTimer();
+                    showQuestion(currentQuestion);
+                    document.body.classList.add('exam-started');
+                }
+            } catch (error) {
+                console.error('Error restoring exam state:', error);
+            }
+        }
+
+        // حفظ حالة الامتحان في localStorage
+        function saveExamState() {
+            if (examStarted) {
+                try {
+                    const examState = {
+                        timeLeft,
+                        userAnswers,
+                        currentQuestion
+                    };
+                    localStorage.setItem('examState', JSON.stringify(examState));
+                } catch (error) {
+                    console.error('Error saving exam state:', error);
+                }
+            }
+        }
+
+        // مسح حالة الامتحان من localStorage
+        function clearExamState() {
+            try {
+                localStorage.removeItem('examState');
+            } catch (error) {
+                console.error('Error clearing exam state:', error);
+            }
+        }
+
+        // بدء الامتحان
+        function startExam() {
+            examStarted = true;
+            startTimer();
+            showQuestion(currentQuestion);
+            document.body.classList.add('exam-started');
+            saveExamState();
+        }
+
+        // بدء العداد
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // تحديث العداد
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                submitExam();
+                return;
+            }
+
+            timeLeft--;
+            updateTimerDisplay();
+            saveExamState();
+        }
+
+        // تحديث عرض العداد
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+
+            timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // تغيير اللون عندما يقل الوقت عن 10 دقائق
+            if (timeLeft <= 600) {
+                timer.style.color = '#ff5252';
+                timer.style.backgroundColor = 'rgba(0,0,0,0.3)';
+            }
+        }
+
+        // عرض السؤال الحالي
+        function showQuestion(index) {
+            // إخفاء جميع الأسئلة
+            questions.forEach(q => q.classList.remove('active'));
+
+            // عرض السؤال الحالي
+            questions[index].classList.add('active');
+
+            // تحديث أزرار التنقل
+            prevBtn.disabled = index === 0;
+            nextBtn.style.display = index === questions.length - 1 ? 'none' : 'block';
+            submitBtn.style.display = index === questions.length - 1 ? 'block' : 'none';
+
+            // تحديث شريط التقدم
+            const progress = ((index + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // تحديث محتوى السؤال والخيارات
+            const questionData = questionsData[index];
+            questions[index].querySelector('.question-text').textContent = questionData.question;
+            const options = questions[index].querySelectorAll('.option');
+            let optionIndex = 0;
+            for (const optionKey in questionData.options) {
+                options[optionIndex].querySelector('label').textContent = questionData.options[optionKey];
+                options[optionIndex].querySelector('input').value = optionKey;
+                optionIndex++;
+            }
+
+            // حفظ حالة الامتحان
+            saveExamState();
+        }
+
+        // تسجيل إجابة المستخدم
+        function recordAnswer(questionName, answer) {
+            userAnswers[questionName] = answer;
+            saveExamState();
+        }
+
+        // تقديم الامتحان
+        function submitExam() {
+            clearInterval(timerInterval);
+
+            // حساب النتيجة
+            let score = 0;
+            let answersReviewHTML = '';
+
+            for (let i = 0; i < questionsData.length; i++) {
+                const questionName = `q${i + 1}`;
+                const userAnswer = userAnswers[questionName];
+                const isCorrect = userAnswer === questionsData[i].correctAnswer;
+
+                if (isCorrect) score++;
+
+                // الحصول على نص السؤال
+                const questionText = questions[i].querySelector('.question-text').textContent;
+
+                // الحصول على نص الإجابة التي اختارها المستخدم
+                let userAnswerText = 'لم يتم الإجابة';
+                if (userAnswer) {
+                    const userAnswerElement = document.querySelector(`input[name="${questionName}"][value="${userAnswer}"]`);
+                    if (userAnswerElement) {
+                        userAnswerText = userAnswerElement.nextElementSibling.textContent;
+                    }
+                }
+
+                // الحصول على نص الإجابة الصحيحة
+                const correctAnswerElement = document.querySelector(`input[name="${questionName}"][value="${questionsData[i].correctAnswer}"]`);
+                const correctAnswerText = correctAnswerElement ? correctAnswerElement.nextElementSibling.textContent : '';
+
+                // إنشاء عنصر مراجعة الإجابة
+                answersReviewHTML += `
+                    <div class="answer-item ${isCorrect ? 'correct' : 'wrong'}">
+                        <div class="answer-status">${isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة'}</div>
+                        <div class="answer-details">
+                            <div><strong>السؤال:</strong> ${questionText}</div>
+                            <div><strong>إجابتك:</strong> ${userAnswerText}</div>
+                            ${!isCorrect ? `<div><strong>الإجابة الصحيحة:</strong> ${correctAnswerText}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // عرض النتائج
+            finalScore.textContent = score;
+            totalQuestions.textContent = questionsData.length;
+            percentage.textContent = Math.round((score / questionsData.length) * 100);
+            answersReview.innerHTML = answersReviewHTML;
+
+            // إخفاء منطقة الامتحان وإظهار النتائج
+            examArea.style.display = 'none';
+            resultsContainer.style.display = 'block';
+
+            // مسح حالة الامتحان المحفوظة
+            clearExamState();
+            document.body.classList.remove('exam-started');
+        }
+
+        // أحداث النقر على الأزرار
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            confirmModal.style.display = 'flex';
+        });
+
+        cancelSubmit.addEventListener('click', () => {
+            confirmModal.style.display = 'none';
+        });
+
+        confirmSubmit.addEventListener('click', () => {
+            confirmModal.style.display = 'none';
+            submitExam();
+        });
+
+        // أحداث اختيار الإجابات
+        questions.forEach(question => {
+            const inputs = question.querySelectorAll('input[type="radio"]');
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    recordAnswer(input.name, input.value);
+                });
+            });
+        });
+
+        // أحداث تغييرات الصفحة
+        window.addEventListener('beforeunload', function(e) {
+            if (examStarted && resultsContainer.style.display !== 'block') {
+                e.preventDefault();
+                e.returnValue = 'هل أنت متأكد من الخروج من الامتحان؟';
+                return e.returnValue;
+            }
+        });
+
+        window.addEventListener('unload', function() {
+            if (examStarted && resultsContainer.style.display !== 'block') {
+                clearExamState();
+            }
+        });
+
+        window.addEventListener('popstate', function(e) {
+            if (examStarted && resultsContainer.style.display !== 'block') {
+                e.preventDefault();
+                exitConfirmModal.style.display = 'flex';
+            }
+        });
+
+        cancelExit.addEventListener('click', function() {
+            exitConfirmModal.style.display = 'none';
+        });
+
+        confirmExit.addEventListener('click', function() {
+            exitConfirmModal.style.display = 'none';
+            window.location.href = 'index.html'; // استبدل index.html بصفحة الكورس
+        });
+
+        // بدء الامتحان عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            restoreExamState();
+            if (!examStarted) {
+                startExamBtn.style.display = 'block';
+                timerBar.style.display = 'none';
+                examArea.style.display = 'none';
+            } else {
+                startExamBtn.style.display = 'none';
+                timerBar.style.display = 'flex';
+                examArea.style.display = 'block';
+            }
+        });
+
+        // بدء الامتحان عند النقر على زر "ابدأ الامتحان"
+        startExamBtn.addEventListener('click', () => {
+            startExam();
+            startExamBtn.style.display = 'none';
+            timerBar.style.display = 'flex';
+            examArea.style.display = 'block';
+        });
+
+        // رسالة تأكيد إعادة تحميل الصفحة
+        window.addEventListener('beforeunload', function(e) {
+            if (examStarted && resultsContainer.style.display !== 'block') {
+                e.preventDefault();
+                e.returnValue = 'هل أنت متأكد من إعادة تحميل الصفحة؟';
+                return e.returnValue;
+            }
+        });
+
+        // عرض رسالة تأكيد إعادة التحميل
+        window.addEventListener('beforeunload', function(e) {
+            if (examStarted && resultsContainer.style.display !== 'block') {
+                e.preventDefault();
+                reloadConfirmModal.style.display = 'flex';
+                e.returnValue = ''; // منع رسالة التأكيد الافتراضية
+            }
+        });
+
+        // إغلاق رسالة تأكيد إعادة التحميل
+        reloadCancel.addEventListener('click', function() {
+            reloadConfirmModal.style.display = 'none';
+        });
+
+        // إعادة تحميل الصفحة بعد التأكيد
+        reloadConfirm.addEventListener('click', function() {
+            reloadConfirmModal.style.display = 'none';
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>
