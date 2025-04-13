@@ -17,10 +17,10 @@
             background-color: #f5f7fa;
             color: #333;
             overflow-x: hidden;
-            display: flex; /* إضافة Flexbox لتوسيط العناصر */
-            justify-content: center; /* توسيط أفقي */
-            align-items: center; /* توسيط رأسي */
-            min-height: 100vh; /* لضمان ملء الشاشة بالكامل */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
         .exam-container {
@@ -332,6 +332,160 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
+        /* أزرار النتائج */
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .result-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn {
+            background: #d4c6ac;
+            color: white;
+        }
+
+        .pdf-btn {
+            background: #2c786c;
+            color: white;
+        }
+
+        .result-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* رسالة نجاح التحميل */
+        .download-success {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2e7d32;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1002;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* تصميم PDF */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .pdf-content, .pdf-content * {
+                visibility: visible;
+            }
+            .pdf-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                font-family: 'Tajawal', sans-serif;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        .pdf-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #d4c6ac;
+            padding-bottom: 20px;
+        }
+
+        .pdf-title {
+            color: #2c786c;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .pdf-subtitle {
+            color: #555;
+            font-size: 18px;
+        }
+
+        .pdf-stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f5f7fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .pdf-stat-item {
+            text-align: center;
+        }
+
+        .pdf-stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c786c;
+        }
+
+        .pdf-stat-label {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .pdf-answers {
+            margin-top: 30px;
+        }
+
+        .pdf-answer-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+
+        .pdf-correct {
+            background-color: #e8f5e9;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .pdf-wrong {
+            background-color: #ffebee;
+            border-left: 4px solid #c62828;
+        }
+
+        .pdf-question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .pdf-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #777;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -348,45 +502,353 @@
             </div>
 
             <div class="question active" id="question1">
-                <div class="question-text">1. السؤال الأول: ...؟</div>
+                <div class="question-text">1. You can't trick Gamal again; he is careful. <strong>Trick</strong> is the opposite in meaning to ...... and ......</div>
                 <div class="options">
                     <div class="option">
                         <input type="radio" name="q1" id="q1a" value="a">
-                        <label for="q1a">الخيار أ</label>
+                        <label for="q1a">guide - help</label>
                     </div>
                     <div class="option">
                         <input type="radio" name="q1" id="q1b" value="b">
-                        <label for="q1b">الخيار ب</label>
+                        <label for="q1b">deceive - mislead</label>
                     </div>
                     <div class="option">
                         <input type="radio" name="q1" id="q1c" value="c">
-                        <label for="q1c">الخيار ج</label>
+                        <label for="q1c">help - cheat</label>
                     </div>
                     <div class="option">
                         <input type="radio" name="q1" id="q1d" value="d">
-                        <label for="q1d">الخيار د</label>
+                        <label for="q1d">mislead - deceive</label>
                     </div>
                 </div>
             </div>
 
             <div class="question" id="question2">
-                <div class="question-text">2. السؤال الثاني: ...؟</div>
+                <div class="question-text">2. In case of fire, keep calm and evacuate the building quickly. The synonyms of <strong>evacuate</strong> are ...... and ......</div>
                 <div class="options">
                     <div class="option">
                         <input type="radio" name="q2" id="q2a" value="a">
-                        <label for="q2a">الخيار أ</label>
+                        <label for="q2a">ignore - observe</label>
                     </div>
                     <div class="option">
                         <input type="radio" name="q2" id="q2b" value="b">
-                        <label for="q2b">الخيار ب</label>
+                        <label for="q2b">leave - clear</label>
                     </div>
                     <div class="option">
                         <input type="radio" name="q2" id="q2c" value="c">
-                        <label for="q2c">الخيار ج</label>
+                        <label for="q2c">neglect - ignore</label>
                     </div>
                     <div class="option">
                         <input type="radio" name="q2" id="q2d" value="d">
-                        <label for="q2d">الخيار د</label>
+                        <label for="q2d">clear - observe</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question3">
+                <div class="question-text">3. I don't have a / an ...... to shrimps, so I can eat it without worrying.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3a" value="a">
+                        <label for="q3a">energy</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3b" value="b">
+                        <label for="q3b">allergy</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3c" value="c">
+                        <label for="q3c">power</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" id="q3d" value="d">
+                        <label for="q3d">relief</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question4">
+                <div class="question-text">4. Jana usually changes ...... once a week. She's keen to have a healthy place to live in.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4a" value="a">
+                        <label for="q4a">drink</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4b" value="b">
+                        <label for="q4b">food</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4c" value="c">
+                        <label for="q4c">pudding</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" id="q4d" value="d">
+                        <label for="q4d">bedding</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question5">
+                <div class="question-text">5. The government is trying to improve ...... measures on all railways.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5a" value="a">
+                        <label for="q5a">safety</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5b" value="b">
+                        <label for="q5b">risk</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5c" value="c">
+                        <label for="q5c">danger</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" id="q5d" value="d">
+                        <label for="q5d">threat</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question6">
+                <div class="question-text">6. Don't worry, all the information you need is ...... on our website.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q6" id="q6a" value="a">
+                        <label for="q6a">forbidden</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6" id="q6b" value="b">
+                        <label for="q6b">available</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6" id="q6c" value="c">
+                        <label for="q6c">unavailable</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6" id="q6d" value="d">
+                        <label for="q6d">hidden</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question7">
+                <div class="question-text">7. You should learn how to ...... first aid as long as you travel by car.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q7" id="q7a" value="a">
+                        <label for="q7a">supply</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7" id="q7b" value="b">
+                        <label for="q7b">do</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7" id="q7c" value="c">
+                        <label for="q7c">make</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7" id="q7d" value="d">
+                        <label for="q7d">take</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question8">
+                <div class="question-text">8. The ...... in our field is very fertile. It is suitable for growing vegetables.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q8" id="q8a" value="a">
+                        <label for="q8a">soil</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" id="q8b" value="b">
+                        <label for="q8b">sail</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" id="q8c" value="c">
+                        <label for="q8c">seal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" id="q8d" value="d">
+                        <label for="q8d">soul</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question9">
+                <div class="question-text">9. You ...... do more sport to keep fit; it is advisable.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q9" id="q9a" value="a">
+                        <label for="q9a">shouldn't</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" id="q9b" value="b">
+                        <label for="q9b">have to</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" id="q9c" value="c">
+                        <label for="q9c">ought</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" id="q9d" value="d">
+                        <label for="q9d">should</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question10">
+                <div class="question-text">10. No noise; patients need rest. You ...... keep quiet.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q10" id="q10a" value="a">
+                        <label for="q10a">shouldn't</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" id="q10b" value="b">
+                        <label for="q10b">must</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" id="q10c" value="c">
+                        <label for="q10c">should</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" id="q10d" value="d">
+                        <label for="q10d">mustn't</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question11">
+                <div class="question-text">11. You ...... take photographs here; it is a military area.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q11" id="q11a" value="a">
+                        <label for="q11a">mustn't</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" id="q11b" value="b">
+                        <label for="q11b">shouldn't</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" id="q11c" value="c">
+                        <label for="q11c">should</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" id="q11d" value="d">
+                        <label for="q11d">must</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question12">
+                <div class="question-text">12. You ...... keep away from uncovered electric wires or you will be electrocuted.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q12" id="q12a" value="a">
+                        <label for="q12a">shouldn't</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" id="q12b" value="b">
+                        <label for="q12b">mustn't</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" id="q12c" value="c">
+                        <label for="q12c">ought</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" id="q12d" value="d">
+                        <label for="q12d">must</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question13">
+                <div class="question-text">13. What ...... do to keep healthy? - I advise you to eat healthy food.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q13" id="q13a" value="a">
+                        <label for="q13a">ought I</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" id="q13b" value="b">
+                        <label for="q13b">I must</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" id="q13c" value="c">
+                        <label for="q13c">should I</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" id="q13d" value="d">
+                        <label for="q13d">did I</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question14">
+                <div class="question-text">14. Samir should ...... the paragraph to correct his mistakes.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q14" id="q14a" value="a">
+                        <label for="q14a">rewrote</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" id="q14b" value="b">
+                        <label for="q14b">rewriting</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" id="q14c" value="c">
+                        <label for="q14c">rewrites</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" id="q14d" value="d">
+                        <label for="q14d">rewrite</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question15">
+                <div class="question-text">15. As a doctor, my best advice to you is that you ...... eat a lot of sweets.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q15" id="q15a" value="a">
+                        <label for="q15a">may not</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" id="q15b" value="b">
+                        <label for="q15b">ought not</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" id="q15c" value="c">
+                        <label for="q15c">wouldn't</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" id="q15d" value="d">
+                        <label for="q15d">need to</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" id="question16">
+                <div class="question-text">16. You shouldn't waste your time watching too much TV; it's ...... to do so.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q16" id="q16a" value="a">
+                        <label for="q16a">inadvisable</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q16" id="q16b" value="b">
+                        <label for="q16b">advisable</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q16" id="q16c" value="c">
+                        <label for="q16c">necessary</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q16" id="q16d" value="d">
+                        <label for="q16d">allowed</label>
                     </div>
                 </div>
             </div>
@@ -400,16 +862,67 @@
 
         <div class="results-container" id="resultsContainer">
             <h2 class="results-title">نتيجة الامتحان</h2>
-            <div class="score">درجتك: <span id="finalScore">0</span>/<span id="totalQuestions">0</span></div>
+            <div class="score">درجتك: <span id="finalScore">0</span>/<span id="totalQuestions">16</span></div>
             <div class="percentage">النسبة المئوية: <span id="percentage">0</span>%</div>
 
             <div class="correct-answers">
                 <h3>تفاصيل الإجابات:</h3>
                 <div id="answersReview"></div>
             </div>
+
+            <div class="result-actions">
+                <button class="result-btn back-btn" id="backToCourseBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                    </svg>
+                    العودة للكورس
+                </button>
+                <button class="result-btn pdf-btn" id="downloadPdfBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                    </svg>
+                    تحميل النتائج PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- محتوى PDF مخفي -->
+        <div id="pdfContent" class="pdf-content" style="display: none;">
+            <div class="pdf-header">
+                <h1 class="pdf-title">نتيجة امتحان UNIT7</h1>
+                <p class="pdf-subtitle">تم الانتهاء من الامتحان في <span id="pdfDate"></span></p>
+            </div>
+
+            <div class="pdf-stats">
+                <div class="pdf-stat-item">
+                    <div class="pdf-stat-value" id="pdfScore">0</div>
+                    <div class="pdf-stat-label">الدرجة النهائية</div>
+                </div>
+                <div class="pdf-stat-item">
+                    <div class="pdf-stat-value" id="pdfPercentage">0%</div>
+                    <div class="pdf-stat-label">النسبة المئوية</div>
+                </div>
+                <div class="pdf-stat-item">
+                    <div class="pdf-stat-value" id="pdfCorrect">0</div>
+                    <div class="pdf-stat-label">إجابات صحيحة</div>
+                </div>
+                <div class="pdf-stat-item">
+                    <div class="pdf-stat-value" id="pdfWrong">0</div>
+                    <div class="pdf-stat-label">إجابات خاطئة</div>
+                </div>
+            </div>
+
+            <div class="pdf-answers" id="pdfAnswersReview"></div>
+
+            <div class="pdf-footer">
+                <p>الشناوي يتمنى لكم النجاح و التوفيق انشاء الله</p>
+                <p>© 2025 جميع الحقوق لمحمد مصطفى عباس</p>
+            </div>
         </div>
     </div>
 
+    <!-- رسائل التأكيد والتنبيهات -->
     <div class="confirm-modal" id="confirmModal">
         <div class="confirm-content">
             <h2>تأكيد تسليم الامتحان</h2>
@@ -433,6 +946,7 @@
             </div>
         </div>
     </div>
+
     <div id="reloadConfirmModal" class="confirm-modal">
         <div class="confirm-content">
             <h2>تأكيد إعادة تحميل الصفحة</h2>
@@ -445,6 +959,10 @@
         </div>
     </div>
 
+    <div class="download-success" id="downloadSuccess">
+        تم تحميل ملف PDF بنجاح!
+    </div>
+
     <script>
         // تعريف المتغيرات العامة
         let timeLeft = 60 * 60; // 60 دقيقة (بالثواني)
@@ -453,25 +971,165 @@
         let userAnswers = {};
         let currentQuestion = 0; // السؤال الحالي
 
-        // الأسئلة والإجابات
+        // الأسئلة والإجابات الصحيحة
         const questionsData = [
             {
-                question: "1. السؤال الأول: ...؟",
+                question: "1. You can't trick Gamal again; he is careful. <strong>Trick</strong> is the opposite in meaning to ...... and ......",
                 options: {
-                    a: "الخيار أ",
-                    b: "الخيار ب",
-                    c: "الخيار ج",
-                    d: "الخيار د"
+                    a: "guide - help",
+                    b: "deceive - mislead",
+                    c: "help - cheat",
+                    d: "mislead - deceive"
+                },
+                correctAnswer: "a"
+            },
+            {
+                question: "2. In case of fire, keep calm and evacuate the building quickly. The synonyms of <strong>evacuate</strong> are ...... and ......",
+                options: {
+                    a: "ignore - observe",
+                    b: "leave - clear",
+                    c: "neglect - ignore",
+                    d: "clear - observe"
                 },
                 correctAnswer: "b"
             },
             {
-                question: "2. السؤال الثاني: ...؟",
+                question: "3. I don't have a / an ...... to shrimps, so I can eat it without worrying.",
                 options: {
-                    a: "الخيار أ",
-                    b: "الخيار ب",
-                    c: "الخيار ج",
-                    d: "الخيار د"
+                    a: "energy",
+                    b: "allergy",
+                    c: "power",
+                    d: "relief"
+                },
+                correctAnswer: "b"
+            },
+            {
+                question: "4. Jana usually changes ...... once a week. She's keen to have a healthy place to live in.",
+                options: {
+                    a: "drink",
+                    b: "food",
+                    c: "pudding",
+                    d: "bedding"
+                },
+                correctAnswer: "d"
+            },
+            {
+                question: "5. The government is trying to improve ...... measures on all railways.",
+                options: {
+                    a: "safety",
+                    b: "risk",
+                    c: "danger",
+                    d: "threat"
+                },
+                correctAnswer: "a"
+            },
+            {
+                question: "6. Don't worry, all the information you need is ...... on our website.",
+                options: {
+                    a: "forbidden",
+                    b: "available",
+                    c: "unavailable",
+                    d: "hidden"
+                },
+                correctAnswer: "b"
+            },
+            {
+                question: "7. You should learn how to ...... first aid as long as you travel by car.",
+                options: {
+                    a: "supply",
+                    b: "do",
+                    c: "make",
+                    d: "take"
+                },
+                correctAnswer: "b"
+            },
+            {
+                question: "8. The ...... in our field is very fertile. It is suitable for growing vegetables.",
+                options: {
+                    a: "soil",
+                    b: "sail",
+                    c: "seal",
+                    d: "soul"
+                },
+                correctAnswer: "a"
+            },
+            {
+                question: "9. You ...... do more sport to keep fit; it is advisable.",
+                options: {
+                    a: "shouldn't",
+                    b: "have to",
+                    c: "ought",
+                    d: "should"
+                },
+                correctAnswer: "d"
+            },
+            {
+                question: "10. No noise; patients need rest. You ...... keep quiet.",
+                options: {
+                    a: "shouldn't",
+                    b: "must",
+                    c: "should",
+                    d: "mustn't"
+                },
+                correctAnswer: "b"
+            },
+            {
+                question: "11. You ...... take photographs here; it is a military area.",
+                options: {
+                    a: "mustn't",
+                    b: "shouldn't",
+                    c: "should",
+                    d: "must"
+                },
+                correctAnswer: "a"
+            },
+            {
+                question: "12. You ...... keep away from uncovered electric wires or you will be electrocuted.",
+                options: {
+                    a: "shouldn't",
+                    b: "mustn't",
+                    c: "ought",
+                    d: "must"
+                },
+                correctAnswer: "d"
+            },
+            {
+                question: "13. What ...... do to keep healthy? - I advise you to eat healthy food.",
+                options: {
+                    a: "ought I",
+                    b: "I must",
+                    c: "should I",
+                    d: "did I"
+                },
+                correctAnswer: "c"
+            },
+            {
+                question: "14. Samir should ...... the paragraph to correct his mistakes.",
+                options: {
+                    a: "rewrote",
+                    b: "rewriting",
+                    c: "rewrites",
+                    d: "rewrite"
+                },
+                correctAnswer: "d"
+            },
+            {
+                question: "15. As a doctor, my best advice to you is that you ...... eat a lot of sweets.",
+                options: {
+                    a: "may not",
+                    b: "ought not",
+                    c: "wouldn't",
+                    d: "need to"
+                },
+                correctAnswer: "b"
+            },
+            {
+                question: "16. You shouldn't waste your time watching too much TV; it's ...... to do so.",
+                options: {
+                    a: "inadvisable",
+                    b: "advisable",
+                    c: "necessary",
+                    d: "allowed"
                 },
                 correctAnswer: "a"
             }
@@ -501,6 +1159,16 @@
         const reloadConfirmModal = document.getElementById('reloadConfirmModal');
         const reloadCancel = document.getElementById('reloadCancel');
         const reloadConfirm = document.getElementById('reloadConfirm');
+        const backToCourseBtn = document.getElementById('backToCourseBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+        const downloadSuccess = document.getElementById('downloadSuccess');
+        const pdfContent = document.getElementById('pdfContent');
+        const pdfScore = document.getElementById('pdfScore');
+        const pdfPercentage = document.getElementById('pdfPercentage');
+        const pdfCorrect = document.getElementById('pdfCorrect');
+        const pdfWrong = document.getElementById('pdfWrong');
+        const pdfAnswersReview = document.getElementById('pdfAnswersReview');
+        const pdfDate = document.getElementById('pdfDate');
 
         // استعادة حالة الامتحان من localStorage
         function restoreExamState() {
@@ -617,17 +1285,6 @@
             const progress = ((index + 1) / questions.length) * 100;
             progressBar.style.width = `${progress}%`;
 
-            // تحديث محتوى السؤال والخيارات
-            const questionData = questionsData[index];
-            questions[index].querySelector('.question-text').textContent = questionData.question;
-            const options = questions[index].querySelectorAll('.option');
-            let optionIndex = 0;
-            for (const optionKey in questionData.options) {
-                options[optionIndex].querySelector('label').textContent = questionData.options[optionKey];
-                options[optionIndex].querySelector('input').value = optionKey;
-                optionIndex++;
-            }
-
             // حفظ حالة الامتحان
             saveExamState();
         }
@@ -645,6 +1302,7 @@
             // حساب النتيجة
             let score = 0;
             let answersReviewHTML = '';
+            let pdfAnswersHTML = '';
 
             for (let i = 0; i < questionsData.length; i++) {
                 const questionName = `q${i + 1}`;
@@ -669,7 +1327,7 @@
                 const correctAnswerElement = document.querySelector(`input[name="${questionName}"][value="${questionsData[i].correctAnswer}"]`);
                 const correctAnswerText = correctAnswerElement ? correctAnswerElement.nextElementSibling.textContent : '';
 
-                // إنشاء عنصر مراجعة الإجابة
+                // إنشاء عنصر مراجعة الإجابة للصفحة
                 answersReviewHTML += `
                     <div class="answer-item ${isCorrect ? 'correct' : 'wrong'}">
                         <div class="answer-status">${isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة'}</div>
@@ -680,6 +1338,15 @@
                         </div>
                     </div>
                 `;
+
+                // إنشاء عنصر مراجعة الإجابة لملف PDF
+                pdfAnswersHTML += `
+                    <div class="pdf-answer-item ${isCorrect ? 'pdf-correct' : 'pdf-wrong'}">
+                        <div class="pdf-question">${questionText}</div>
+                        <div><strong>إجابتك:</strong> ${userAnswerText}</div>
+                        ${!isCorrect ? `<div><strong>الإجابة الصحيحة:</strong> ${correctAnswerText}</div>` : ''}
+                    </div>
+                `;
             }
 
             // عرض النتائج
@@ -688,6 +1355,23 @@
             percentage.textContent = Math.round((score / questionsData.length) * 100);
             answersReview.innerHTML = answersReviewHTML;
 
+            // تحديث محتوى PDF
+            pdfScore.textContent = `${score}/${questionsData.length}`;
+            pdfPercentage.textContent = `${Math.round((score / questionsData.length) * 100)}%`;
+            pdfCorrect.textContent = score;
+            pdfWrong.textContent = questionsData.length - score;
+            pdfAnswersReview.innerHTML = pdfAnswersHTML;
+            
+            // تحديث تاريخ PDF
+            const now = new Date();
+            pdfDate.textContent = now.toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
             // إخفاء منطقة الامتحان وإظهار النتائج
             examArea.style.display = 'none';
             resultsContainer.style.display = 'block';
@@ -695,6 +1379,116 @@
             // مسح حالة الامتحان المحفوظة
             clearExamState();
             document.body.classList.remove('exam-started');
+        }
+
+        // إنشاء وتحميل ملف PDF
+        function downloadPdf() {
+            // إنشاء نافذة جديدة للطباعة
+            const printWindow = window.open('', '', 'width=800,height=600');
+            
+            // إنشاء محتوى HTML لملف PDF
+            const pdfHtml = `
+                <!DOCTYPE html>
+                <html lang="ar" dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>نتيجة امتحان UNIT7 QUIZ</title>
+                    <style>
+                        body {
+                            font-family: 'Tajawal', sans-serif;
+                            padding: 20px;
+                            color: #333;
+                        }
+                        .pdf-header {
+                            text-align: center;
+                            margin-bottom: 30px;
+                            border-bottom: 2px solid #d4c6ac;
+                            padding-bottom: 20px;
+                        }
+                        .pdf-title {
+                            color: #2c786c;
+                            font-size: 28px;
+                            margin-bottom: 10px;
+                        }
+                        .pdf-subtitle {
+                            color: #555;
+                            font-size: 18px;
+                        }
+                        .pdf-stats {
+                            display: flex;
+                            justify-content: space-around;
+                            background: #f5f7fa;
+                            padding: 15px;
+                            border-radius: 8px;
+                            margin: 20px 0;
+                        }
+                        .pdf-stat-item {
+                            text-align: center;
+                        }
+                        .pdf-stat-value {
+                            font-size: 24px;
+                            font-weight: bold;
+                            color: #2c786c;
+                        }
+                        .pdf-stat-label {
+                            color: #777;
+                            font-size: 14px;
+                        }
+                        .pdf-answers {
+                            margin-top: 30px;
+                        }
+                        .pdf-answer-item {
+                            margin-bottom: 20px;
+                            padding: 15px;
+                            border-radius: 5px;
+                            border: 1px solid #eee;
+                        }
+                        .pdf-correct {
+                            background-color: #e8f5e9;
+                            border-left: 4px solid #2e7d32;
+                        }
+                        .pdf-wrong {
+                            background-color: #ffebee;
+                            border-left: 4px solid #c62828;
+                        }
+                        .pdf-question {
+                            font-weight: bold;
+                            margin-bottom: 10px;
+                            color: #333;
+                        }
+                        .pdf-footer {
+                            text-align: center;
+                            margin-top: 40px;
+                            padding-top: 20px;
+                            border-top: 1px solid #eee;
+                            color: #777;
+                            font-size: 14px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${pdfContent.innerHTML}
+                </body>
+                </html>
+            `;
+
+            // كتابة المحتوى في نافذة الطباعة
+            printWindow.document.open();
+            printWindow.document.write(pdfHtml);
+            printWindow.document.close();
+
+            // الانتظار حتى يتم تحميل المحتوى ثم الطباعة
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+                
+                // عرض رسالة نجاح التحميل
+                downloadSuccess.style.display = 'block';
+                setTimeout(() => {
+                    downloadSuccess.style.display = 'none';
+                }, 3000);
+            }, 500);
         }
 
         // أحداث النقر على الأزرار
@@ -816,6 +1610,14 @@
             reloadConfirmModal.style.display = 'none';
             window.location.reload();
         });
+
+        // زر العودة للكورس
+        backToCourseBtn.addEventListener('click', function() {
+            window.location.href = 'index.html'; // استبدل index.html بصفحة الكورس
+        });
+
+        // زر تحميل PDF
+        downloadPdfBtn.addEventListener('click', downloadPdf);
     </script>
 </body>
 </html>
